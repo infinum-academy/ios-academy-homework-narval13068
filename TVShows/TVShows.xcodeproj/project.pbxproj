@@ -8,11 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		C1C3371B22CE5499000995D0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1C3371A22CE5499000995D0 /* AppDelegate.swift */; };
-		C1C3371D22CE5499000995D0 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1C3371C22CE5499000995D0 /* ViewController.swift */; };
 		C1C3372022CE5499000995D0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C1C3371E22CE5499000995D0 /* Main.storyboard */; };
 		C1C3372222CE549A000995D0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C1C3372122CE549A000995D0 /* Assets.xcassets */; };
 		C1C3372522CE549A000995D0 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C1C3372322CE549A000995D0 /* LaunchScreen.storyboard */; };
 		C1C3373022CE549A000995D0 /* TVShowsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1C3372F22CE549A000995D0 /* TVShowsUITests.swift */; };
+		C1C3373B22CE6733000995D0 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1C3373A22CE6733000995D0 /* ViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -28,7 +28,6 @@
 /* Begin PBXFileReference section */
 		C1C3371722CE5499000995D0 /* TVShows.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TVShows.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C1C3371A22CE5499000995D0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		C1C3371C22CE5499000995D0 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		C1C3371F22CE5499000995D0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		C1C3372122CE549A000995D0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C1C3372422CE549A000995D0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -36,6 +35,7 @@
 		C1C3372B22CE549A000995D0 /* TVShowsUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TVShowsUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C1C3372F22CE549A000995D0 /* TVShowsUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TVShowsUITests.swift; sourceTree = "<group>"; };
 		C1C3373122CE549A000995D0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C1C3373A22CE6733000995D0 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -78,8 +78,8 @@
 			isa = PBXGroup;
 			children = (
 				C1C3371A22CE5499000995D0 /* AppDelegate.swift */,
-				C1C3371C22CE5499000995D0 /* ViewController.swift */,
 				C1C3371E22CE5499000995D0 /* Main.storyboard */,
+				C1C3373A22CE6733000995D0 /* ViewController.swift */,
 				C1C3372122CE549A000995D0 /* Assets.xcassets */,
 				C1C3372322CE549A000995D0 /* LaunchScreen.storyboard */,
 				C1C3372622CE549A000995D0 /* Info.plist */,
@@ -197,7 +197,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C1C3371D22CE5499000995D0 /* ViewController.swift in Sources */,
+				C1C3373B22CE6733000995D0 /* ViewController.swift in Sources */,
 				C1C3371B22CE5499000995D0 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -361,6 +361,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = TVShows/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -378,6 +379,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = TVShows/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

@@ -6,15 +6,27 @@
 //  Copyright © 2019 Infinum Academy. All rights reserved.
 //
 
+import Foundation
 import UIKit
 
-class ViewController: UIViewController {
-
+class ViewController : UIViewController {
+    
+    
+    
+    @IBOutlet weak var mySwitch: UISwitch!
+    
+    
     override func viewDidLoad() {
-        super.viewDidLoad()
-        // Do any additional setup after loading the view.
+        view.backgroundColor = .red
     }
-
-
+    
+    @IBAction func myaction(_ sender : UISwitch) {
+        if (sender.isOn == true) {
+             view.backgroundColor = .yellow
+        }
+        else {
+            view.backgroundColor = .red
+        }
+    }
+    
 }
-
