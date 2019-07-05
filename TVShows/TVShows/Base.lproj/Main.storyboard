@@ -17,21 +17,9 @@
                     <view key="view" contentMode="scaleToFill" id="qHZ-KK-7hK">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qfB-We-DlL">
-                                <rect key="frame" x="183" y="230" width="49" height="31"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <connections>
-                                    <action selector="myaction:" destination="GbD-kU-hdj" eventType="valueChanged" id="FLS-Pc-bRX"/>
-                                </connections>
-                            </switch>
-                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <viewLayoutGuide key="safeArea" id="KFq-0d-VEa"/>
                     </view>
-                    <connections>
-                        <outlet property="mySwitch" destination="qfB-We-DlL" id="s2s-Zp-F1x"/>
-                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="3XB-tc-Mz8" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

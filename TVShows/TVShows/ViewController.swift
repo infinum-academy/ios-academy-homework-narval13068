@@ -12,21 +12,9 @@ import UIKit
 class ViewController : UIViewController {
     
     
-    
-    @IBOutlet weak var mySwitch: UISwitch!
-    
-    
     override func viewDidLoad() {
-        view.backgroundColor = .red
+        
     }
     
-    @IBAction func myaction(_ sender : UISwitch) {
-        if (sender.isOn == true) {
-             view.backgroundColor = .yellow
-        }
-        else {
-            view.backgroundColor = .red
-        }
-    }
     
 }
