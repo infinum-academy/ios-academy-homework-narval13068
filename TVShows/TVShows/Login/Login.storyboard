@@ -34,7 +34,7 @@
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
                                 <connections>
-                                    <action selector="increaseButtonTapped:" destination="RQk-zl-JQu" eventType="touchUpInside" id="Do9-VL-65x"/>
+                                    <action selector="increaseButtonTapped" destination="RQk-zl-JQu" eventType="touchUpInside" id="V6C-Us-Irm"/>
                                 </connections>
                             </button>
                             <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" style="white" translatesAutoresizingMaskIntoConstraints="NO" id="No3-VU-WoI">
@@ -50,7 +50,7 @@
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
                                 <connections>
-                                    <action selector="changeStateButtonTapped:" destination="RQk-zl-JQu" eventType="touchUpInside" id="m2R-xn-9gE"/>
+                                    <action selector="changeStateButtonTapped" destination="RQk-zl-JQu" eventType="touchUpInside" id="RoE-zd-ePg"/>
                                 </connections>
                             </button>
                         </subviews>

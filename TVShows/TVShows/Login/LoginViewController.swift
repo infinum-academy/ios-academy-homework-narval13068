@@ -9,54 +9,69 @@
 import Foundation
 import UIKit
 
-class LoginViewController : UIViewController {
+final class LoginViewController : UIViewController {
     
+    // MARK: - Outlets
     
-    @IBOutlet weak var sumLabel: UILabel!
-    @IBOutlet weak var increaseButton: UIButton!
-    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
-    @IBOutlet weak var changeStateButton: UIButton!
+    @IBOutlet private weak var sumLabel: UILabel!
+    @IBOutlet private weak var increaseButton: UIButton!
+    @IBOutlet private weak var activityIndicator: UIActivityIndicatorView!
+    @IBOutlet private weak var changeStateButton: UIButton!
     
-    var sum : Int = 0
+    // MARK: - Properties
     
+    private var numberOfClicks: Int = 0
     
+    // MARK: - Lifecycle methods
     
     override func viewDidLoad() {
-        sumLabel.text = String(sum)
-        increaseButton.layer.cornerRadius = 10
-        increaseButton.clipsToBounds = true
-        changeStateButton.layer.cornerRadius=10
-        changeStateButton.clipsToBounds=true
+        super.viewDidLoad()
+        initialConfigureUI()
     }
     
     override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        onAppearConfigureUI()
+    }
+    
+    // MARK: - Initial configuration of UI
+    
+    private func initialConfigureUI() {
+        sumLabel.text = String(numberOfClicks)
+        increaseButton.layer.cornerRadius = 10
+        increaseButton.clipsToBounds = true
+        changeStateButton.layer.cornerRadius = 10
+        changeStateButton.clipsToBounds = true
+    }
+    
+    // MARK: - On appear configuration of UI
+    
+    private func onAppearConfigureUI() {
         activityIndicator.startAnimating()
-        changeStateButton.isHidden=true
+        changeStateButton.isHidden = true
         DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
             self.activityIndicator.stopAnimating()
-            self.changeStateButton.isHidden=false
+            self.changeStateButton.isHidden = false
         }
     }
     
-    @IBAction func increaseButtonTapped(_ sender: Any) {
+    // MARK: - Actions
+    
+    @IBAction private func increaseButtonTapped() {
         activityIndicator.startAnimating()
-        sum+=1
-        sumLabel.text = String(sum)
+        numberOfClicks += 1
+        sumLabel.text = String(numberOfClicks)
         activityIndicator.stopAnimating()
     }
     
-  
-    
-    @IBAction func changeStateButtonTapped(_ sender: Any) {
-        if (activityIndicator.isAnimating==true) {
+    @IBAction private func changeStateButtonTapped() {
+        if activityIndicator.isAnimating {
             activityIndicator.stopAnimating()
             changeStateButton.setTitle("Start", for: .normal)
-        }
-        else {
+        } else {
             activityIndicator.startAnimating()
             changeStateButton.setTitle("Stop", for: .normal)
         }
     }
-    
-    
+
 }
