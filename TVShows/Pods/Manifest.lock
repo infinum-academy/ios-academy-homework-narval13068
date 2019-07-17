@@ -1,3 +1,33 @@
-PODFILE CHECKSUM: f42da98adb373949b1097bc61aa76f7647c4208f
+PODS:
+  - Alamofire (4.8.1)
+  - CodableAlamofire (1.1.1):
+    - Alamofire (~> 4.0)
+  - PromiseKit/Alamofire (6.8.3):
+    - Alamofire (~> 4.0)
+    - PromiseKit/CorePromise
+  - PromiseKit/CorePromise (6.8.3)
+  - SVProgressHUD (2.2.5)
+
+DEPENDENCIES:
+  - Alamofire
+  - CodableAlamofire
+  - PromiseKit/Alamofire
+  - PromiseKit/CorePromise (~> 6.0)
+  - SVProgressHUD
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - Alamofire
+    - CodableAlamofire
+    - PromiseKit
+    - SVProgressHUD
+
+SPEC CHECKSUMS:
+  Alamofire: 16ce2c353fb72865124ddae8a57c5942388f4f11
+  CodableAlamofire: b587c1198562824abb1f468aed34feb00d6cecd8
+  PromiseKit: 94c6e781838c5bf4717677d0d882b0e7250c80fc
+  SVProgressHUD: 1428aafac632c1f86f62aa4243ec12008d7a51d6
+
+PODFILE CHECKSUM: 88fc11d29f9238970062d658e128d3fb2f905dc2
 
 COCOAPODS: 1.6.1

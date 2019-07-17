@@ -6,6 +6,11 @@ target 'TVShows' do
   use_frameworks!
 
   # Pods for TVShows
+  pod 'Alamofire'
+  pod 'SVProgressHUD'
+  pod 'CodableAlamofire'
+  pod "PromiseKit/CorePromise", "~> 6.0"
+  pod 'PromiseKit/Alamofire'
 
   target 'TVShowsUITests' do
     inherit! :search_paths

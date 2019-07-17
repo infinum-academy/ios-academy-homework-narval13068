@@ -10,9 +10,13 @@
 		06FF82FDBF6BCBCB7D13914E /* Pods_TVShows.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E84454A641FB7D1B88A12D2 /* Pods_TVShows.framework */; };
 		C111FC1522D741EA0018CA11 /* Login.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C111FC1422D741EA0018CA11 /* Login.storyboard */; };
 		C111FC1722D742010018CA11 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C111FC1622D742010018CA11 /* LoginViewController.swift */; };
+		C118886522DF0BF300E4DA74 /* PromiseKit+KeyPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = C118886422DF0BF300E4DA74 /* PromiseKit+KeyPath.swift */; };
 		C1C3371B22CE5499000995D0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1C3371A22CE5499000995D0 /* AppDelegate.swift */; };
 		C1C3372222CE549A000995D0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C1C3372122CE549A000995D0 /* Assets.xcassets */; };
 		C1C3372522CE549A000995D0 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C1C3372322CE549A000995D0 /* LaunchScreen.storyboard */; };
+		C1D760B222DB4F3C0036DB76 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1D760B122DB4F3C0036DB76 /* User.swift */; };
+		C1D760B522DB52F50036DB76 /* HomeScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C1D760B422DB52F50036DB76 /* HomeScreen.storyboard */; };
+		C1D760B722DB53600036DB76 /* HomeScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1D760B622DB53600036DB76 /* HomeScreenViewController.swift */; };
 		DCA67751BDFDDAA0D57A34F5 /* Pods_TVShowsUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5CC16744E623B232AEE53533 /* Pods_TVShowsUITests.framework */; };
 /* End PBXBuildFile section */
 
@@ -35,12 +39,16 @@
 		BBC9D388F885D997E723BE48 /* Pods-TVShowsUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TVShowsUITests.debug.xcconfig"; path = "Target Support Files/Pods-TVShowsUITests/Pods-TVShowsUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		C111FC1422D741EA0018CA11 /* Login.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Login.storyboard; sourceTree = "<group>"; };
 		C111FC1622D742010018CA11 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		C118886422DF0BF300E4DA74 /* PromiseKit+KeyPath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PromiseKit+KeyPath.swift"; sourceTree = "<group>"; };
 		C1C3371722CE5499000995D0 /* TVShows.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TVShows.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C1C3371A22CE5499000995D0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C1C3372122CE549A000995D0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C1C3372422CE549A000995D0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		C1C3372622CE549A000995D0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C1C3372B22CE549A000995D0 /* TVShowsUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TVShowsUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		C1D760B122DB4F3C0036DB76 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		C1D760B422DB52F50036DB76 /* HomeScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = HomeScreen.storyboard; sourceTree = "<group>"; };
+		C1D760B622DB53600036DB76 /* HomeScreenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeScreenViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -83,6 +91,14 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		C118886322DF0BD100E4DA74 /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				C118886422DF0BF300E4DA74 /* PromiseKit+KeyPath.swift */,
+			);
+			path = Common;
+			sourceTree = "<group>";
+		};
 		C1C3370E22CE5499000995D0 = {
 			isa = PBXGroup;
 			children = (
@@ -105,9 +121,12 @@
 		C1C3371922CE5499000995D0 /* TVShows */ = {
 			isa = PBXGroup;
 			children = (
+				C118886322DF0BD100E4DA74 /* Common */,
+				C1D760B022DB3B550036DB76 /* SupportingFiles */,
+				C1D760AF22DB39E50036DB76 /* Modules */,
+				C1D760AE22DB39D20036DB76 /* Application */,
 				C1C3372622CE549A000995D0 /* Info.plist */,
-				C1D760A322D898920036DB76 /* AppSettings */,
-				C1C3373C22CF8F84000995D0 /* Login */,
+				C1D760A322D898920036DB76 /* Resources */,
 			);
 			path = TVShows;
 			sourceTree = "<group>";
@@ -117,18 +136,51 @@
 			children = (
 				C111FC1422D741EA0018CA11 /* Login.storyboard */,
 				C111FC1622D742010018CA11 /* LoginViewController.swift */,
+				C1D760B122DB4F3C0036DB76 /* User.swift */,
 			);
 			path = Login;
 			sourceTree = "<group>";
 		};
-		C1D760A322D898920036DB76 /* AppSettings */ = {
+		C1D760A322D898920036DB76 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				C1C3372122CE549A000995D0 /* Assets.xcassets */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		C1D760AE22DB39D20036DB76 /* Application */ = {
 			isa = PBXGroup;
 			children = (
 				C1C3371A22CE5499000995D0 /* AppDelegate.swift */,
-				C1C3372122CE549A000995D0 /* Assets.xcassets */,
+			);
+			path = Application;
+			sourceTree = "<group>";
+		};
+		C1D760AF22DB39E50036DB76 /* Modules */ = {
+			isa = PBXGroup;
+			children = (
+				C1D760B322DB527C0036DB76 /* HomeScreen */,
+				C1C3373C22CF8F84000995D0 /* Login */,
+			);
+			path = Modules;
+			sourceTree = "<group>";
+		};
+		C1D760B022DB3B550036DB76 /* SupportingFiles */ = {
+			isa = PBXGroup;
+			children = (
 				C1C3372322CE549A000995D0 /* LaunchScreen.storyboard */,
 			);
-			path = AppSettings;
+			path = SupportingFiles;
+			sourceTree = "<group>";
+		};
+		C1D760B322DB527C0036DB76 /* HomeScreen */ = {
+			isa = PBXGroup;
+			children = (
+				C1D760B422DB52F50036DB76 /* HomeScreen.storyboard */,
+				C1D760B622DB53600036DB76 /* HomeScreenViewController.swift */,
+			);
+			path = HomeScreen;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -142,6 +194,7 @@
 				C1C3371322CE5499000995D0 /* Sources */,
 				C1C3371422CE5499000995D0 /* Frameworks */,
 				C1C3371522CE5499000995D0 /* Resources */,
+				13F2EF8767412C634E4F7D32 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -215,6 +268,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C111FC1522D741EA0018CA11 /* Login.storyboard in Resources */,
+				C1D760B522DB52F50036DB76 /* HomeScreen.storyboard in Resources */,
 				C1C3372522CE549A000995D0 /* LaunchScreen.storyboard in Resources */,
 				C1C3372222CE549A000995D0 /* Assets.xcassets in Resources */,
 			);
@@ -230,6 +284,34 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		13F2EF8767412C634E4F7D32 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-TVShows/Pods-TVShows-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
+				"${BUILT_PRODUCTS_DIR}/CodableAlamofire/CodableAlamofire.framework",
+				"${BUILT_PRODUCTS_DIR}/PromiseKit/PromiseKit.framework",
+				"${BUILT_PRODUCTS_DIR}/SVProgressHUD/SVProgressHUD.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CodableAlamofire.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PromiseKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SVProgressHUD.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-TVShows/Pods-TVShows-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		C0B4D0E0CE18D0454EC4F940 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -282,7 +364,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				C111FC1722D742010018CA11 /* LoginViewController.swift in Sources */,
+				C118886522DF0BF300E4DA74 /* PromiseKit+KeyPath.swift in Sources */,
+				C1D760B722DB53600036DB76 /* HomeScreenViewController.swift in Sources */,
 				C1C3371B22CE5499000995D0 /* AppDelegate.swift in Sources */,
+				C1D760B222DB4F3C0036DB76 /* User.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
