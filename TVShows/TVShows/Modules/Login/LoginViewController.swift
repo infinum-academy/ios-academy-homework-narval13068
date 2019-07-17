@@ -63,13 +63,15 @@ final class LoginViewController : UIViewController,UITextFieldDelegate {
     
     @IBAction private func logInPushed(_ sender: UIButton) {
         if (!(usernameField.text ?? "").isEmpty && !(passwordField.text ?? "").isEmpty) {
-            _loginUserWith(email: usernameField.text!, password: passwordField.text!)
+            _promiseKitLoginUserWith(email: usernameField.text!, password: passwordField.text!)
+            self.view.endEditing(true)
         }
     }
     
     @IBAction private func createAccountPushed(_ sender: UIButton) {
         if (!(usernameField.text ?? "").isEmpty && !(passwordField.text ?? "").isEmpty) {
             _promiseKitRegisterUserWith(email: usernameField.text!, password: passwordField.text!)
+            self.view.endEditing(true)
         }
     }
     
@@ -163,17 +165,19 @@ private extension LoginViewController {
                 .validate()
                .responseDecodable(User.self, keyPath: "data")
             }.then { (user: User) -> Promise<LoginUser> in
+                self.registeredUser = user
                 return Alamofire
-                    .request("https://api.infinum.academy/api/users/sessions", method: .post, parameters: parameters,encoding: JSONEncoding.default)
+                    .request("https://api.infinum.academy/api/users/sessions", method: .post, parameters: parameters, encoding: JSONEncoding.default)
                     .validate()
                     .responseDecodable(LoginUser.self, keyPath: "data")
             }
-            .done { user in
-                print(user)
+            .done { loggedUser in
+                self.loggedUser = loggedUser
+                self.showHomeScreen()
             }.ensure {
                 SVProgressHUD.dismiss()
             }.catch { error in
-                print(error)
+                 print("API failure: \(error)")
             }
     }
     
@@ -183,17 +187,18 @@ private extension LoginViewController {
             "email": email,
             "password": password
         ]
-        
         firstly {
             Alamofire
-                .request("https://api.infinum.academy/api/sessions", method: .post, parameters: parameters,encoding: JSONEncoding.default)
+                .request("https://api.infinum.academy/api/users/sessions", method: .post, parameters: parameters, encoding: JSONEncoding.default)
+                .validate()
                 .responseDecodable(LoginUser.self, keyPath: "data")
-            }.done { user in
-                print(user)
+            }.done { loggedUser in
+                self.loggedUser=loggedUser
+                self.showHomeScreen()
             }.ensure {
                 SVProgressHUD.dismiss()
             }.catch { error in
-                print(error)
-        }
+                 print("API failure: \(error)")
+            }
     }
 }
