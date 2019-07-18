@@ -28,7 +28,6 @@ final class LoginViewController : UIViewController,UITextFieldDelegate {
 
     private var registeredUser: User?
     private var loggedUser: LoginUser?
-    private var homeScreenViewController: HomeScreenViewController?
     
     // MARK - Lifecycle methods
     
@@ -51,8 +50,6 @@ final class LoginViewController : UIViewController,UITextFieldDelegate {
         passwordField.delegate = self
         self.view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(viewTapped)))
         SVProgressHUD.setDefaultMaskType(.black)
-        let storyboard = UIStoryboard(name: "HomeScreen", bundle: nil)
-        homeScreenViewController = storyboard.instantiateViewController(withIdentifier: "HomeScreenViewController") as? HomeScreenViewController
     }
     
     // MARK - Actions
@@ -62,17 +59,18 @@ final class LoginViewController : UIViewController,UITextFieldDelegate {
     }
     
     @IBAction private func logInPushed(_ sender: UIButton) {
-        if (!(usernameField.text ?? "").isEmpty && !(passwordField.text ?? "").isEmpty) {
-            _promiseKitLoginUserWith(email: usernameField.text!, password: passwordField.text!)
+        if let username = usernameField.text, !username.isEmpty, let password = passwordField.text, !password.isEmpty {
+            _promiseKitLoginUserWith(email: username, password: password)
             self.view.endEditing(true)
         }
     }
     
     @IBAction private func createAccountPushed(_ sender: UIButton) {
-        if (!(usernameField.text ?? "").isEmpty && !(passwordField.text ?? "").isEmpty) {
-            _promiseKitRegisterUserWith(email: usernameField.text!, password: passwordField.text!)
+       if let username = usernameField.text, !username.isEmpty, let password = passwordField.text, !password.isEmpty {
+             print(password)
+            _promiseKitRegisterUserWith(email: username, password: password)
             self.view.endEditing(true)
-        }
+       }
     }
     
     // MARK - Dismissing keyboard
@@ -89,7 +87,9 @@ final class LoginViewController : UIViewController,UITextFieldDelegate {
     // MARK - Navigation
     
     private func showHomeScreen() {
-        if let homeScreen = self.homeScreenViewController {
+        let storyboard = UIStoryboard(name: "HomeScreen", bundle: nil)
+        let homeScreenViewController = storyboard.instantiateViewController(withIdentifier: "HomeScreenViewController") as? HomeScreenViewController
+        if let homeScreen = homeScreenViewController {
             self.navigationController?.pushViewController(homeScreen, animated: true)
             self.navigationController?.setNavigationBarHidden(false, animated: true)
         } else {
@@ -103,56 +103,6 @@ final class LoginViewController : UIViewController,UITextFieldDelegate {
 
 private extension LoginViewController {
     
-    func _registerUserWith(email: String, password: String) {
-        SVProgressHUD.show()
-        let parameters: [String: String] = [
-            "email": email,
-            "password": password
-        ]
-        Alamofire
-            .request(
-                "https://api.infinum.academy/api/users",
-                method: .post,
-                parameters: parameters,
-                encoding: JSONEncoding.default)
-            .validate()
-            .responseDecodableObject(keyPath: "data", decoder: JSONDecoder()) { (response: DataResponse<User>) in
-                SVProgressHUD.dismiss()
-                switch response.result {
-                case .success(let user):
-                    self.registeredUser = user
-                    self._loginUserWith(email: email, password: password)
-                case .failure(let error):
-                    print("API failure: \(error)")
-                }
-            }
-    }
-    
-    func _loginUserWith(email: String, password: String) {
-        SVProgressHUD.show()
-        let parameters: [String: String] = [
-            "email": email,
-            "password": password
-        ]
-        Alamofire
-            .request(
-                "https://api.infinum.academy/api/users/sessions",
-                method: .post,
-                parameters: parameters,
-                encoding: JSONEncoding.default)
-            .validate()
-            .responseDecodableObject(keyPath: "data", decoder: JSONDecoder()) { (response: DataResponse<LoginUser>) in
-                SVProgressHUD.dismiss()
-                switch response.result {
-                case .success(let loggedUser):
-                    self.loggedUser = loggedUser
-                    self.showHomeScreen()
-                case .failure(let error):
-                    print("API failure: \(error)")
-                }
-            }
-    }
-    
     func _promiseKitRegisterUserWith(email: String,password: String) {
         SVProgressHUD.show()
         let parameters: [String: String] = [
@@ -164,16 +114,16 @@ private extension LoginViewController {
                 .request("https://api.infinum.academy/api/users", method: .post, parameters: parameters, encoding: JSONEncoding.default)
                 .validate()
                .responseDecodable(User.self, keyPath: "data")
-            }.then { (user: User) -> Promise<LoginUser> in
-                self.registeredUser = user
+            }.then { [weak self] (user: User) -> Promise<LoginUser> in
+                self?.registeredUser = user
                 return Alamofire
                     .request("https://api.infinum.academy/api/users/sessions", method: .post, parameters: parameters, encoding: JSONEncoding.default)
                     .validate()
                     .responseDecodable(LoginUser.self, keyPath: "data")
             }
-            .done { loggedUser in
-                self.loggedUser = loggedUser
-                self.showHomeScreen()
+            .done { [weak self] loggedUser in
+                self?.loggedUser = loggedUser
+                self?.showHomeScreen()
             }.ensure {
                 SVProgressHUD.dismiss()
             }.catch { error in
@@ -191,10 +141,10 @@ private extension LoginViewController {
             Alamofire
                 .request("https://api.infinum.academy/api/users/sessions", method: .post, parameters: parameters, encoding: JSONEncoding.default)
                 .validate()
-                .responseDecodable(LoginUser.self, keyPath: "data")
-            }.done { loggedUser in
-                self.loggedUser=loggedUser
-                self.showHomeScreen()
+                .responseDecodable(LoginUser.self,keyPath: "data")
+            }.done { [weak self] loggedUser in
+                self?.loggedUser=loggedUser
+                self?.showHomeScreen()
             }.ensure {
                 SVProgressHUD.dismiss()
             }.catch { error in
