@@ -67,7 +67,6 @@ final class LoginViewController : UIViewController,UITextFieldDelegate {
     
     @IBAction private func createAccountPushed(_ sender: UIButton) {
        if let username = usernameField.text, !username.isEmpty, let password = passwordField.text, !password.isEmpty {
-             print(password)
             _promiseKitRegisterUserWith(email: username, password: password)
             self.view.endEditing(true)
        }
