@@ -8,7 +8,7 @@
 
 import Foundation
 
-// MARK - Codable struct for API calls
+// MARK - Codable structs for API calls
 
 struct Show: Codable {
     
