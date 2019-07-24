@@ -8,7 +8,10 @@
 
 import Foundation
 
+// MARK - Codable struct for API calls
+
 struct User: Codable {
+    
     let email: String
     let type: String
     let id: String

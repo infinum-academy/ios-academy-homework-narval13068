@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Add Ep View Controller-->
+        <scene sceneID="wwS-3Z-blw">
+            <objects>
+                <viewController storyboardIdentifier="AddEpViewController" id="Zio-tb-D6z" customClass="AddEpViewController" customModule="TVShows" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Y5X-pg-uDo">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="I6x-UL-clJ">
+                                <rect key="frame" x="0.0" y="20" width="375" height="647"/>
+                                <subviews>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic-camera" translatesAutoresizingMaskIntoConstraints="NO" id="GVJ-Kg-GEI">
+                                        <rect key="frame" x="175.5" y="131" width="24" height="24"/>
+                                    </imageView>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6PF-7R-2lL">
+                                        <rect key="frame" x="141" y="163" width="93" height="30"/>
+                                        <state key="normal" title="Upload photo">
+                                            <color key="titleColor" name="Pink"/>
+                                        </state>
+                                    </button>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="31" translatesAutoresizingMaskIntoConstraints="NO" id="vhC-mS-ol9">
+                                        <rect key="frame" x="20" y="250" width="335" height="257"/>
+                                        <subviews>
+                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="wWW-HS-zOX">
+                                                <rect key="frame" x="0.0" y="0.0" width="335" height="41"/>
+                                                <subviews>
+                                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Episode title" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="1Hd-Lc-AtC">
+                                                        <rect key="frame" x="0.0" y="0.0" width="335" height="40"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="40" id="ZIK-Ah-h2N"/>
+                                                        </constraints>
+                                                        <nil key="textColor"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                        <textInputTraits key="textInputTraits"/>
+                                                    </textField>
+                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vhv-kd-pW4">
+                                                        <rect key="frame" x="0.0" y="40" width="335" height="1"/>
+                                                        <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="1" id="56M-m3-igM"/>
+                                                        </constraints>
+                                                    </view>
+                                                </subviews>
+                                            </stackView>
+                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="EXu-Nz-giD">
+                                                <rect key="frame" x="0.0" y="72" width="335" height="41"/>
+                                                <subviews>
+                                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Season n." textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="CCr-3E-9OF">
+                                                        <rect key="frame" x="0.0" y="0.0" width="335" height="40"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="40" id="RNw-tC-m2L"/>
+                                                        </constraints>
+                                                        <nil key="textColor"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                        <textInputTraits key="textInputTraits"/>
+                                                    </textField>
+                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ccz-4a-lOh">
+                                                        <rect key="frame" x="0.0" y="40" width="335" height="1"/>
+                                                        <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="1" id="BYF-1d-hvB"/>
+                                                        </constraints>
+                                                    </view>
+                                                </subviews>
+                                            </stackView>
+                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="flR-dc-CEW">
+                                                <rect key="frame" x="0.0" y="144" width="335" height="41"/>
+                                                <subviews>
+                                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Episode n." textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Ttx-gP-4Ov">
+                                                        <rect key="frame" x="0.0" y="0.0" width="335" height="40"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="40" id="geB-jR-D71"/>
+                                                        </constraints>
+                                                        <nil key="textColor"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                        <textInputTraits key="textInputTraits"/>
+                                                    </textField>
+                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Sxf-gj-PKK">
+                                                        <rect key="frame" x="0.0" y="40" width="335" height="1"/>
+                                                        <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="1" id="kED-sZ-eLe"/>
+                                                        </constraints>
+                                                    </view>
+                                                </subviews>
+                                            </stackView>
+                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="jLD-kk-c2e">
+                                                <rect key="frame" x="0.0" y="216" width="335" height="41"/>
+                                                <subviews>
+                                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Episode description" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="2Y5-Ex-7PP">
+                                                        <rect key="frame" x="0.0" y="0.0" width="335" height="40"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="40" id="Lq0-Xt-Vsi"/>
+                                                        </constraints>
+                                                        <nil key="textColor"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                        <textInputTraits key="textInputTraits"/>
+                                                    </textField>
+                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="K8Z-SK-DPo">
+                                                        <rect key="frame" x="0.0" y="40" width="335" height="1"/>
+                                                        <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="1" id="mBL-nD-0hZ"/>
+                                                        </constraints>
+                                                    </view>
+                                                </subviews>
+                                            </stackView>
+                                        </subviews>
+                                    </stackView>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstItem="vhC-mS-ol9" firstAttribute="centerX" secondItem="6PF-7R-2lL" secondAttribute="centerX" id="C8g-3e-cun"/>
+                                    <constraint firstAttribute="trailing" secondItem="vhC-mS-ol9" secondAttribute="trailing" constant="20" id="FeC-rQ-dDk"/>
+                                    <constraint firstItem="6PF-7R-2lL" firstAttribute="centerX" secondItem="I6x-UL-clJ" secondAttribute="centerX" id="IDR-aL-BRw"/>
+                                    <constraint firstAttribute="bottom" secondItem="vhC-mS-ol9" secondAttribute="bottom" constant="311" id="PHr-hw-P9S"/>
+                                    <constraint firstItem="GVJ-Kg-GEI" firstAttribute="centerX" secondItem="I6x-UL-clJ" secondAttribute="centerX" id="exC-pu-LMc"/>
+                                    <constraint firstItem="vhC-mS-ol9" firstAttribute="top" secondItem="6PF-7R-2lL" secondAttribute="bottom" constant="57" id="iBB-KS-vGc"/>
+                                    <constraint firstItem="6PF-7R-2lL" firstAttribute="top" secondItem="GVJ-Kg-GEI" secondAttribute="bottom" constant="8" id="rP5-qT-wC8"/>
+                                    <constraint firstItem="vhC-mS-ol9" firstAttribute="leading" secondItem="I6x-UL-clJ" secondAttribute="leading" constant="20" id="tsm-Ug-kwa"/>
+                                    <constraint firstItem="GVJ-Kg-GEI" firstAttribute="top" secondItem="I6x-UL-clJ" secondAttribute="top" constant="131" id="vMh-B5-NCa"/>
+                                </constraints>
+                            </scrollView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="I6x-UL-clJ" firstAttribute="top" secondItem="GKi-5r-sNh" secondAttribute="top" id="4qW-vQ-dT0"/>
+                            <constraint firstItem="I6x-UL-clJ" firstAttribute="bottom" secondItem="GKi-5r-sNh" secondAttribute="bottom" id="GJH-1i-6YW"/>
+                            <constraint firstItem="I6x-UL-clJ" firstAttribute="leading" secondItem="GKi-5r-sNh" secondAttribute="leading" id="VKa-Pb-Ytr"/>
+                            <constraint firstItem="I6x-UL-clJ" firstAttribute="trailing" secondItem="GKi-5r-sNh" secondAttribute="trailing" id="ezh-wy-RrR"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="GKi-5r-sNh"/>
+                    </view>
+                    <connections>
+                        <outlet property="episodeDescrField" destination="2Y5-Ex-7PP" id="IFL-Bv-eTR"/>
+                        <outlet property="episodeNField" destination="Ttx-gP-4Ov" id="9dc-bU-tIe"/>
+                        <outlet property="episodeTitleField" destination="1Hd-Lc-AtC" id="xEl-NU-4XB"/>
+                        <outlet property="scrollView" destination="I6x-UL-clJ" id="b40-Tw-0kV"/>
+                        <outlet property="seasonNField" destination="CCr-3E-9OF" id="44d-Td-tfG"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="KFg-HO-vcZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="163.768115942029" y="138.61607142857142"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="ic-camera" width="24" height="24"/>
+        <namedColor name="Pink">
+            <color red="1" green="0.45882352941176469" blue="0.5490196078431373" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+    </resources>
+</document>

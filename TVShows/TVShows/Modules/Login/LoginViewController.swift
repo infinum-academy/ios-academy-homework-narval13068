@@ -14,7 +14,7 @@ import CodableAlamofire
 import PromiseKit
 
 
-final class LoginViewController : UIViewController,UITextFieldDelegate {
+final class LoginViewController : UIViewController, UITextFieldDelegate {
     
     // MARK - Outlets
     
@@ -48,7 +48,9 @@ final class LoginViewController : UIViewController,UITextFieldDelegate {
         scrollView.showsVerticalScrollIndicator = false
         usernameField.delegate = self
         passwordField.delegate = self
-        self.view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(viewTapped)))
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardFinishedShowing), name: UIResponder.keyboardDidHideNotification, object: nil)
+        view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(viewTapped)))
         SVProgressHUD.setDefaultMaskType(.black)
     }
     
@@ -78,9 +80,23 @@ final class LoginViewController : UIViewController,UITextFieldDelegate {
         self.view.endEditing(true)
     }
     
-    internal func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
+    }
+    
+    // MARK - Moving Scrollview for showing textfields when keyboard overlaps them
+    
+    @objc private func keyboardWillShow(_ notification: Notification) {
+        if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
+            let keyboardRectangle = keyboardFrame.cgRectValue
+            let keyboardHeight = keyboardRectangle.height
+            scrollView.contentInset = UIEdgeInsets(top: 0.0, left: 0.0, bottom: keyboardHeight, right: 0.0)
+        }
+    }
+        
+    @objc private func keyboardFinishedShowing(_ notification: NSNotification) {
+        scrollView.contentInset = UIEdgeInsets.zero
     }
     
     // MARK - Navigation
@@ -89,11 +105,20 @@ final class LoginViewController : UIViewController,UITextFieldDelegate {
         let storyboard = UIStoryboard(name: "HomeScreen", bundle: nil)
         let homeScreenViewController = storyboard.instantiateViewController(withIdentifier: "HomeScreenViewController") as? HomeScreenViewController
         if let homeScreen = homeScreenViewController {
-            self.navigationController?.pushViewController(homeScreen, animated: true)
+            homeScreen.loggedUser = self.loggedUser
             self.navigationController?.setNavigationBarHidden(false, animated: true)
-        } else {
-            print("Push of HomeScreen Failed")
+            self.navigationController?.setViewControllers([homeScreen], animated: true)
         }
+    }
+    
+    // MARK: Show Error message
+    
+    private func showErrorMessage(message: String) {
+        let title = "Error"
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        let OKAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+        alertController.addAction(OKAction)
+        self.present(alertController, animated: true, completion: nil)
     }
     
 }
@@ -102,7 +127,7 @@ final class LoginViewController : UIViewController,UITextFieldDelegate {
 
 private extension LoginViewController {
     
-    func _promiseKitRegisterUserWith(email: String,password: String) {
+    func _promiseKitRegisterUserWith(email: String, password: String) {
         SVProgressHUD.show()
         let parameters: [String: String] = [
             "email": email,
@@ -125,8 +150,8 @@ private extension LoginViewController {
                 self?.showHomeScreen()
             }.ensure {
                 SVProgressHUD.dismiss()
-            }.catch { error in
-                 print("API failure: \(error)")
+            }.catch { [weak self] error in
+                 self?.showErrorMessage(message: "Registering new user failed")
             }
     }
     
@@ -140,14 +165,15 @@ private extension LoginViewController {
             Alamofire
                 .request("https://api.infinum.academy/api/users/sessions", method: .post, parameters: parameters, encoding: JSONEncoding.default)
                 .validate()
-                .responseDecodable(LoginUser.self,keyPath: "data")
+                .responseDecodable(LoginUser.self, keyPath: "data")
             }.done { [weak self] loggedUser in
                 self?.loggedUser=loggedUser
                 self?.showHomeScreen()
+                print(loggedUser.token)
             }.ensure {
                 SVProgressHUD.dismiss()
-            }.catch { error in
-                 print("API failure: \(error)")
+            }.catch { [weak self] error in
+                self?.showErrorMessage(message: "Logging in failed")
             }
     }
 }
