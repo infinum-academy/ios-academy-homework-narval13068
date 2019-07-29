@@ -20,6 +20,8 @@ final class ShowDetailsViewController: UIViewController {
     var loggedUser: LoginUser?
     private var showEpisodes: [Episode]?
     private var showDetails: ShowDetails?
+    private var refreshControl = UIRefreshControl()
+    
     
     // MARK - Outlets
     
@@ -40,6 +42,8 @@ final class ShowDetailsViewController: UIViewController {
             _promiseKitFetchShowDetails(id: id, token: token)
             _promiseKitFetchShowEpisodes(id: id, token: token)
         }
+        refreshControl.addTarget(self,action: #selector(updateUITableView),for: UIControl.Event.valueChanged)
+        tableView.addSubview(refreshControl)
     }
     
     private func setupTableView() {
@@ -49,6 +53,15 @@ final class ShowDetailsViewController: UIViewController {
         tableView.separatorStyle = .none
         tableView.showsVerticalScrollIndicator = false
         tableView.rowHeight = UITableView.automaticDimension
+    }
+    
+    // MARK - UIRefreshControl calling function
+    
+    @objc private func updateUITableView() {
+        if let id = showId, let token = loggedUser?.token {
+            _promiseKitFetchShowEpisodes(id: id, token: token)
+        }
+        refreshControl.endRefreshing()
     }
     
     // MARK: Show Error message
@@ -69,7 +82,7 @@ final class ShowDetailsViewController: UIViewController {
     }
     
     @IBAction private func addEpisodeButtonTapped(_ sender: UIButton) {
-        let storyboard = UIStoryboard(name: "EpisodeScreens", bundle: nil)
+        let storyboard = UIStoryboard(name: "AddEpisodeScreen", bundle: nil)
         let addEpViewController = storyboard.instantiateViewController(withIdentifier: "AddEpViewController") as? AddEpViewController
         if let appEpScreen = addEpViewController {
                 appEpScreen.showId = showId
@@ -157,6 +170,15 @@ extension ShowDetailsViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+        if indexPath.row>0 {
+            let storyboard = UIStoryboard(name: "EpisodeScreen", bundle: nil)
+            let episodeScreenViewController = storyboard.instantiateViewController(withIdentifier: "EpisodeScreenViewController") as? EpisodeScreenViewController
+            if let epScreen = episodeScreenViewController, let episodes = showEpisodes {
+                epScreen.episode = episodes[indexPath.row-1]
+                epScreen.loggedUser = loggedUser
+                navigationController?.pushViewController(epScreen, animated: true)
+            }
+        }
     }
 }
 

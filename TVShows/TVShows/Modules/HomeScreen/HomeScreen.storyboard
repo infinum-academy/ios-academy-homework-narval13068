@@ -6,7 +6,6 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
-        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -19,52 +18,29 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="iDT-Lb-vbw">
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Idt-z3-7ja">
                                 <rect key="frame" x="0.0" y="20" width="414" height="716"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="TVShowTableViewCell" rowHeight="100" id="S1L-2j-BmS" customClass="TVShowTableViewCell" customModule="TVShows" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="28" width="414" height="100"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" ambiguous="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="S1L-2j-BmS" id="Vvs-er-dWI">
-                                            <rect key="frame" x="0.0" y="0.0" width="414" height="99.666666666666671"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title " textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0WJ-VW-uPr">
-                                                    <rect key="frame" x="15" y="0.0" width="399" height="99.666666666666671"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="height" constant="99.670000000000002" id="IUs-Mr-bnI"/>
-                                                    </constraints>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="20"/>
-                                                    <color key="textColor" name="Pink"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                            </subviews>
-                                            <constraints>
-                                                <constraint firstAttribute="trailing" secondItem="0WJ-VW-uPr" secondAttribute="trailing" id="5xA-2o-EQw"/>
-                                                <constraint firstItem="0WJ-VW-uPr" firstAttribute="top" secondItem="Vvs-er-dWI" secondAttribute="top" id="BuE-84-8dr"/>
-                                                <constraint firstItem="0WJ-VW-uPr" firstAttribute="leading" secondItem="Vvs-er-dWI" secondAttribute="leading" constant="15" id="Xr3-ab-U9p"/>
-                                                <constraint firstAttribute="bottom" secondItem="0WJ-VW-uPr" secondAttribute="bottom" id="bnv-Wn-IBr"/>
-                                            </constraints>
-                                        </tableViewCellContentView>
-                                        <connections>
-                                            <outlet property="titleLabel" destination="0WJ-VW-uPr" id="582-zU-0sC"/>
-                                        </connections>
-                                    </tableViewCell>
-                                </prototypes>
-                            </tableView>
+                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="2hO-sg-Hfz">
+                                    <size key="itemSize" width="200" height="110"/>
+                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="10" maxX="0.0" maxY="0.0"/>
+                                </collectionViewFlowLayout>
+                                <cells/>
+                            </collectionView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="iDT-Lb-vbw" firstAttribute="top" secondItem="7Gw-OQ-ywG" secondAttribute="top" id="J6S-w6-aQm"/>
-                            <constraint firstItem="7Gw-OQ-ywG" firstAttribute="bottom" secondItem="iDT-Lb-vbw" secondAttribute="bottom" id="Q7T-WH-iwC"/>
-                            <constraint firstItem="iDT-Lb-vbw" firstAttribute="leading" secondItem="7Gw-OQ-ywG" secondAttribute="leading" id="kgL-Zv-LC6"/>
-                            <constraint firstItem="7Gw-OQ-ywG" firstAttribute="trailing" secondItem="iDT-Lb-vbw" secondAttribute="trailing" id="yTc-0K-K0F"/>
+                            <constraint firstItem="7Gw-OQ-ywG" firstAttribute="bottom" secondItem="Idt-z3-7ja" secondAttribute="bottom" id="Ief-n7-Qe2"/>
+                            <constraint firstItem="Idt-z3-7ja" firstAttribute="leading" secondItem="7Gw-OQ-ywG" secondAttribute="leading" id="VPb-E3-O4e"/>
+                            <constraint firstItem="7Gw-OQ-ywG" firstAttribute="trailing" secondItem="Idt-z3-7ja" secondAttribute="trailing" id="aQO-e4-feZ"/>
+                            <constraint firstItem="Idt-z3-7ja" firstAttribute="top" secondItem="7Gw-OQ-ywG" secondAttribute="top" id="bgM-Xu-qu6"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="7Gw-OQ-ywG"/>
                     </view>
                     <connections>
-                        <outlet property="tableView" destination="iDT-Lb-vbw" id="ZkX-Rm-mAv"/>
+                        <outlet property="collectionView" destination="Idt-z3-7ja" id="LBN-xU-YZV"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="jVK-rT-gXS" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -72,9 +48,4 @@
             <point key="canvasLocation" x="124.6376811594203" y="138.58695652173915"/>
         </scene>
     </scenes>
-    <resources>
-        <namedColor name="Pink">
-            <color red="1" green="0.45882352941176469" blue="0.5490196078431373" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
-    </resources>
 </document>

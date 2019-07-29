@@ -11,6 +11,7 @@ import UIKit
 import SVProgressHUD
 import Alamofire
 import PromiseKit
+import Keychain
 
 final class HomeScreenViewController: UIViewController {
     
@@ -18,10 +19,13 @@ final class HomeScreenViewController: UIViewController {
     
     var loggedUser: LoginUser?
     private var shows: [Show]?
+    private var flowLayout: Bool = false
+    private var gridButton: UIBarButtonItem?
+    private var flowButton: UIBarButtonItem?
     
     // MARK - Outlets
     
-    @IBOutlet private weak var tableView: UITableView!
+    @IBOutlet private weak var collectionView: UICollectionView!
     
     // MARK - Lifecycle methods
     
@@ -33,21 +37,24 @@ final class HomeScreenViewController: UIViewController {
     // MARK: Configure UI
     
     private func setupUI() {
-        setupUITableView()
+        setupUICollectionView()
         if let token = loggedUser?.token {
             _promiseKitFetchShows(token: token)
         }
         title = "Shows"
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "ic-logout"), style: .plain, target: self, action: #selector(logoutUser))
+        gridButton = UIBarButtonItem(image: UIImage(named: "ic-gridview"), style: .plain, target: self, action: #selector(changeCollectionViewLayout))
+        flowButton = UIBarButtonItem(image: UIImage(named: "ic-listview"), style: .plain, target: self, action: #selector(changeCollectionViewLayout))
+        navigationItem.rightBarButtonItem = flowButton
+        navigationController?.navigationBar.tintColor = UIColor.darkGray
     }
     
-    private func setupUITableView() {
-        tableView.tableFooterView = UIView()
-        tableView.delegate = self
-        tableView.dataSource = self
-        tableView.separatorStyle = .none
-        tableView.showsVerticalScrollIndicator = false
-        tableView.estimatedRowHeight = 100
-        tableView.rowHeight = UITableView.automaticDimension
+    private func setupUICollectionView() {
+        collectionView.register(UINib(nibName: "ShowGridLayoutCell", bundle: nil), forCellWithReuseIdentifier: "ShowGridLayoutCell")
+        collectionView.register(UINib(nibName: "ShowFlowLayoutCell", bundle: nil), forCellWithReuseIdentifier: "ShowFlowLayoutCell")
+        collectionView.delegate = self
+        collectionView.dataSource = self
+        collectionView.showsVerticalScrollIndicator = false
     }
     
     // MARK: Show Error message
@@ -58,6 +65,35 @@ final class HomeScreenViewController: UIViewController {
         let OKAction = UIAlertAction(title: "OK", style: .default, handler: nil)
         alertController.addAction(OKAction)
         self.present(alertController, animated: true, completion: nil)
+    }
+    
+    // MARK - Logout user
+    
+    @objc private func logoutUser() {
+        _ = Keychain.delete("loginEmail")
+        _ = Keychain.delete("loginPassword")
+        showLoginScreen()
+    }
+    
+    private func showLoginScreen() {
+        let storyboard = UIStoryboard(name: "Login", bundle: nil)
+        let loginViewController = storyboard.instantiateViewController(withIdentifier: "LoginViewController") as? LoginViewController
+        if let loginScreen = loginViewController {
+            self.navigationController?.setNavigationBarHidden(true, animated: true)
+            self.navigationController?.setViewControllers([loginScreen], animated: true)
+        }
+    }
+    
+    // MARK - Change UICollectionView layout between flow and grid layout
+    
+    @objc private func changeCollectionViewLayout() {
+        if flowLayout {
+            navigationItem.rightBarButtonItem = flowButton
+        } else {
+            navigationItem.rightBarButtonItem = gridButton
+        }
+        flowLayout = !flowLayout
+        collectionView.reloadData()
     }
 }
 
@@ -77,7 +113,7 @@ private extension HomeScreenViewController {
                 .responseDecodable([Show].self, keyPath: "data")
             }.done { [weak self] shows in
                 self?.shows = shows
-                self?.tableView.reloadData()
+                self?.collectionView.reloadData()
             }.ensure {
                 SVProgressHUD.dismiss()
             }.catch { [weak self] error in
@@ -86,42 +122,41 @@ private extension HomeScreenViewController {
     }
 }
 
-// MARK: UITableViewDataSource setup methods
+// MARK: UICollectionViewDataSource setup methods
 
-extension HomeScreenViewController: UITableViewDataSource {
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+extension HomeScreenViewController: UICollectionViewDataSource {
+
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if let numberOfCells = shows?.count {
             return numberOfCells
         }
         return 0
     }
     
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: TVShowTableViewCell.self), for: indexPath) as! TVShowTableViewCell
-        if let arrayOfShows = shows {
-            cell.configure(show: arrayOfShows[indexPath.row])
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        if flowLayout {
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: String(describing: ShowFlowLayoutCell.self), for: indexPath) as! ShowFlowLayoutCell
+            if let arrayOfShows = shows {
+                cell.configure(show: arrayOfShows[indexPath.row])
+            }
+            return cell
+        } else {
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: String(describing: ShowGridLayoutCell.self), for: indexPath) as! ShowGridLayoutCell
+            if let arrayOfShows = shows {
+                cell.configure(show: arrayOfShows[indexPath.row])
+            }
+            return cell
         }
-        return cell
     }
     
 }
 
-// MARK - UITableViewDelegate methods for UITableView behaviour
+// MARK - UICollectionViewDelegate methods
 
-extension HomeScreenViewController: UITableViewDelegate {
+extension HomeScreenViewController: UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     
-    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
-        let deleteAction = UITableViewRowAction(style: .default, title: "Delete", handler: { (action,indexPath) in
-            self.shows?.remove(at: indexPath.row)
-            self.tableView.deleteRows(at: [indexPath], with: .fade)
-        })
-        deleteAction.backgroundColor = UIColor.red
-        return [deleteAction]
-    }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        collectionView.deselectItem(at: indexPath, animated: true)
         let storyboard = UIStoryboard(name: "ShowScreens", bundle: nil)
         let showDetailsViewController = storyboard.instantiateViewController(withIdentifier: "ShowDetailsViewController") as? ShowDetailsViewController
         if let showScreen = showDetailsViewController {
@@ -134,5 +169,14 @@ extension HomeScreenViewController: UITableViewDelegate {
         }
     }
     
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let width = UIScreen.main.bounds.width
+        if flowLayout {
+            return CGSize(width: width, height: 110)
+        } else {
+            let scale = (width / 2.1)
+            return CGSize(width: scale, height: scale)
+        }
+    }
 }
 

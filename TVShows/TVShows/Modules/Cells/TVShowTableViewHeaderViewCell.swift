@@ -9,13 +9,14 @@
 import Foundation
 import UIKit
 
-class TVShowTableViewHeaderViewCell : UITableViewCell {
+final class TVShowTableViewHeaderViewCell : UITableViewCell {
     
     // MARK - Properties
     
-    @IBOutlet weak var showTitle: UILabel!
-    @IBOutlet weak var showDescription: UILabel!
-    @IBOutlet weak var numberOfEpisodes: UILabel!
+    @IBOutlet private weak var showTitle: UILabel!
+    @IBOutlet private weak var showDescription: UILabel!
+    @IBOutlet private weak var numberOfEpisodes: UILabel!
+    @IBOutlet private weak var showImageView: UIImageView!
     
     // MARK - Lifecycle methods
     
@@ -24,6 +25,7 @@ class TVShowTableViewHeaderViewCell : UITableViewCell {
         showTitle.text = nil
         showDescription.text = nil
         numberOfEpisodes.text = nil
+        showImageView.image = nil
      }
     
     // MARK - Configure Cell UI
@@ -32,6 +34,8 @@ class TVShowTableViewHeaderViewCell : UITableViewCell {
         showTitle.text = details.title
         showDescription.text = details.description
         numberOfEpisodes.text = String(count)
+        let url = URL(string: "https://api.infinum.academy"+details.imageUrl)
+        showImageView.kf.setImage(with: url)
     }
     
 }

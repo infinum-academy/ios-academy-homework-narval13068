@@ -12,6 +12,7 @@ import Alamofire
 import SVProgressHUD
 import CodableAlamofire
 import PromiseKit
+import Keychain
 
 
 final class LoginViewController : UIViewController, UITextFieldDelegate {
@@ -23,6 +24,9 @@ final class LoginViewController : UIViewController, UITextFieldDelegate {
     @IBOutlet private weak var rememberMeButton: UIButton!
     @IBOutlet private weak var usernameField: UITextField!
     @IBOutlet private weak var passwordField: UITextField!
+    @IBOutlet weak var usernameStackView: UIStackView!
+    @IBOutlet weak var passwordStackView: UIStackView!
+    @IBOutlet weak var rememberMeCheckBox: UIButton!
     
     // MARK - Properties
 
@@ -34,6 +38,7 @@ final class LoginViewController : UIViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         initialConfigureUI()
+        checkRememberedUser()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -54,6 +59,14 @@ final class LoginViewController : UIViewController, UITextFieldDelegate {
         SVProgressHUD.setDefaultMaskType(.black)
     }
     
+    func checkRememberedUser() {
+        let email = Keychain.load("loginEmail")
+        let password = Keychain.load("loginPassword")
+        if let email = email, let password = password {
+            _promiseKitLoginUserWith(email: email, password: password)
+        }
+    }
+    
     // MARK - Actions
     
     @IBAction private func rememberMeButtonTapped(_ sender: UIButton) {
@@ -61,9 +74,14 @@ final class LoginViewController : UIViewController, UITextFieldDelegate {
     }
     
     @IBAction private func logInPushed(_ sender: UIButton) {
+        loginButtonClickedAnimation()
         if let username = usernameField.text, !username.isEmpty, let password = passwordField.text, !password.isEmpty {
             _promiseKitLoginUserWith(email: username, password: password)
             self.view.endEditing(true)
+        } else if let username = usernameField.text, username.isEmpty {
+            usernameFieldShakeAnimation()
+        } else {
+            passwordFieldShakeAnimation()
         }
     }
     
@@ -71,6 +89,10 @@ final class LoginViewController : UIViewController, UITextFieldDelegate {
        if let username = usernameField.text, !username.isEmpty, let password = passwordField.text, !password.isEmpty {
             _promiseKitRegisterUserWith(email: username, password: password)
             self.view.endEditing(true)
+       } else if let username = usernameField.text, username.isEmpty {
+            usernameFieldShakeAnimation()
+       } else {
+            passwordFieldShakeAnimation()
        }
     }
     
@@ -111,6 +133,13 @@ final class LoginViewController : UIViewController, UITextFieldDelegate {
         }
     }
     
+    private func rememberUser(email: String, password: String) {
+        if rememberMeCheckBox.isSelected {
+            _ = Keychain.save(email, forKey: "loginEmail" )
+            _ = Keychain.save(password, forKey: "loginPassword")
+        }
+    }
+    
     // MARK: Show Error message
     
     private func showErrorMessage(message: String) {
@@ -120,7 +149,6 @@ final class LoginViewController : UIViewController, UITextFieldDelegate {
         alertController.addAction(OKAction)
         self.present(alertController, animated: true, completion: nil)
     }
-    
 }
 
 // MARK - Api Calls
@@ -147,6 +175,7 @@ private extension LoginViewController {
             }
             .done { [weak self] loggedUser in
                 self?.loggedUser = loggedUser
+                self?.rememberUser(email: email, password: password)
                 self?.showHomeScreen()
             }.ensure {
                 SVProgressHUD.dismiss()
@@ -167,13 +196,70 @@ private extension LoginViewController {
                 .validate()
                 .responseDecodable(LoginUser.self, keyPath: "data")
             }.done { [weak self] loggedUser in
-                self?.loggedUser=loggedUser
-                self?.showHomeScreen()
+                self?.loggedUser = loggedUser
                 print(loggedUser.token)
+                self?.rememberUser(email: email,password: password)
+                self?.showHomeScreen()
             }.ensure {
                 SVProgressHUD.dismiss()
             }.catch { [weak self] error in
-                self?.showErrorMessage(message: "Logging in failed")
+                self?.showPasswordWrongAnimation()
             }
+    }
+}
+
+// MARK - Animations
+
+extension LoginViewController {
+    
+    func showPasswordWrongAnimation() {
+        loginButtonPulsate()
+        passwordFieldShakeAnimation()
+    }
+    
+    func loginButtonPulsate() {
+        let pulseAnimation = CABasicAnimation(keyPath: "transform.scale")
+        pulseAnimation.duration = 0.1
+        pulseAnimation.fromValue = 1
+        pulseAnimation.toValue = 1.1
+        pulseAnimation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut)
+        pulseAnimation.autoreverses = true
+        pulseAnimation.repeatCount = 1
+        loginButton.layer.add(pulseAnimation, forKey: "animateLoginButton")
+    }
+    
+    func loginButtonClickedAnimation() {
+        let pulseAnimation = CABasicAnimation(keyPath: "transform.scale")
+        pulseAnimation.duration = 0.1
+        pulseAnimation.fromValue = 1
+        pulseAnimation.toValue = 0.95
+        pulseAnimation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut)
+        pulseAnimation.autoreverses = true
+        pulseAnimation.repeatCount = 1
+        loginButton.layer.add(pulseAnimation, forKey: "animateLoginButton")
+    }
+    
+    func usernameFieldShakeAnimation() {
+        UIView.animate(withDuration: 0.2, animations: {
+            self.usernameStackView.transform = CGAffineTransform(rotationAngle: CGFloat.pi / 100)
+        })
+        UIView.animate(withDuration: 0.2, delay: 0.2, animations: {
+            self.usernameStackView.transform = CGAffineTransform(rotationAngle: -CGFloat.pi / 100)
+        })
+        UIView.animate(withDuration: 0.2 , delay: 0.4, animations: {
+            self.usernameStackView.transform = .identity
+        })
+    }
+    
+    func passwordFieldShakeAnimation() {
+        UIView.animate(withDuration: 0.2, animations: {
+            self.passwordStackView.transform = CGAffineTransform(rotationAngle: CGFloat.pi / 100)
+        })
+        UIView.animate(withDuration: 0.2, delay: 0.2, animations: {
+            self.passwordStackView.transform = CGAffineTransform(rotationAngle: -CGFloat.pi / 100)
+        })
+        UIView.animate(withDuration: 0.2 , delay: 0.4, animations: {
+            self.passwordStackView.transform = .identity
+        })
     }
 }
