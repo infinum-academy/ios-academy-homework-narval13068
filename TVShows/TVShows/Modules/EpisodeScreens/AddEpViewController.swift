@@ -42,19 +42,30 @@ final class AddEpViewController: UIViewController, UITextFieldDelegate {
     // MARK - Configure UI
     
     private func setupUI() {
+        textFieldSetup()
+        navigationBarSetup()
+        notificationCenterSetup()
+        self.view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(viewTapped)))
+    }
+    
+    private func notificationCenterSetup() {
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardFinishedShowing), name: UIResponder.keyboardDidHideNotification, object: nil)
+    }
+    
+    private func navigationBarSetup() {
         title = "Add episode"
-        episodeTitleField.delegate = self
-        seasonNField.delegate = self
-        episodeNField.delegate = self
-        episodeDescrField.delegate = self
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(didSelectCancelAddEp))
         navigationItem.leftBarButtonItem?.tintColor = UIColor(named: "Pink")
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Add", style: .plain, target: self, action: #selector(didSelectAddEp))
         navigationItem.rightBarButtonItem?.tintColor = UIColor(named: "Pink")
-        scrollView.showsVerticalScrollIndicator = false
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardFinishedShowing), name: UIResponder.keyboardDidHideNotification, object: nil)
-        self.view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(viewTapped)))
+    }
+    
+    private func textFieldSetup() {
+        episodeTitleField.delegate = self
+        seasonNField.delegate = self
+        episodeNField.delegate = self
+        episodeDescrField.delegate = self
     }
     
     // MARK - Actions on tapped Navigation Item
@@ -64,20 +75,17 @@ final class AddEpViewController: UIViewController, UITextFieldDelegate {
     }
     
     @objc private func didSelectAddEp() {
-        if let id = showId, let token = loggedUser?.token, let title = episodeTitleField.text, !title.isEmpty, let description = episodeDescrField.text, !description.isEmpty,
-            let episodeNumber = episodeNField.text, !episodeNumber.isEmpty, let season = seasonNField.text, !season.isEmpty {
-           _promiseKitPostNewEp(id: id, title: title, description: description, episodeNumber: episodeNumber, season: season, token: token)
-        }
+        guard let id = showId, let token = loggedUser?.token, let title = episodeTitleField.text, !title.isEmpty, let description = episodeDescrField.text, !description.isEmpty, let episodeNumber = episodeNField.text, !episodeNumber.isEmpty, let season = seasonNField.text, !season.isEmpty else { return }
+        _promiseKitPostNewEp(id: id, title: title, description: description, episodeNumber: episodeNumber, season: season, token: token)
     }
     
     // MARK - Moving Scrollview for showing textfields when keyboard overlaps them
     
     @objc private func keyboardWillShow(_ notification: Notification) {
-        if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
-            let keyboardRectangle = keyboardFrame.cgRectValue
-            let keyboardHeight = keyboardRectangle.height
-            scrollView.contentInset = UIEdgeInsets(top: 0.0, left: 0.0, bottom: keyboardHeight, right: 0.0)
-        }
+        guard let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue else { return }
+        let keyboardRectangle = keyboardFrame.cgRectValue
+        let keyboardHeight = keyboardRectangle.height
+        scrollView.contentInset = UIEdgeInsets(top: 0.0, left: 0.0, bottom: keyboardHeight, right: 0.0)
     }
     
     @objc private func keyboardFinishedShowing(_ notification: NSNotification) {
@@ -92,17 +100,7 @@ final class AddEpViewController: UIViewController, UITextFieldDelegate {
     }
     
     @objc private func viewTapped (sender: UITapGestureRecognizer) {
-        self.view.endEditing(true)
-    }
-    
-    // MARK: Show Error message
-    
-    private func showErrorMessage(message: String) {
-        let title = "Error"
-        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        let OKAction = UIAlertAction(title: "OK", style: .default, handler: nil)
-        alertController.addAction(OKAction)
-        self.present(alertController, animated: true, completion: nil)
+        view.endEditing(true)
     }
     
 }
@@ -138,5 +136,18 @@ private extension AddEpViewController {
                 print(error)
                 self?.showErrorMessage(message: "Adding Episode failed")
         }
+    }
+}
+
+// MARK: Show Error message
+
+extension UIViewController {
+    
+    func showErrorMessage(message: String) {
+        let title = "Error"
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        let OKAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+        alertController.addAction(OKAction)
+        self.present(alertController, animated: true, completion: nil)
     }
 }

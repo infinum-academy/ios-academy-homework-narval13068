@@ -32,14 +32,18 @@ final class ShowDetailsViewController: UIViewController {
         setupUI()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(true, animated: false)
+    }
+    
     // MARK - Configure UI
 
     private func setupUI() {
         setupTableView()
-        if let id = showId, let token = loggedUser?.token {
-            _promiseKitFetchShowDetails(id: id, token: token)
-            _promiseKitFetchShowEpisodes(id: id, token: token)
-        }
+        guard let id = showId, let token = loggedUser?.token else { return }
+        _promiseKitFetchShowDetails(id: id, token: token)
+        _promiseKitFetchShowEpisodes(id: id, token: token)
     }
     
     private func setupTableView() {
@@ -51,33 +55,21 @@ final class ShowDetailsViewController: UIViewController {
         tableView.rowHeight = UITableView.automaticDimension
     }
     
-    // MARK: Show Error message
-    
-    private func showErrorMessage(message: String) {
-        let title = "Error"
-        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        let OKAction = UIAlertAction(title: "OK", style: .default, handler: nil)
-        alertController.addAction(OKAction)
-        self.present(alertController, animated: true, completion: nil)
-    }
-    
     // MARK - Navigation
     
     @IBAction private func backButtonTapped(_ sender: UIButton) {
         navigationController?.popViewController(animated: true)
-        navigationController?.setNavigationBarHidden(false, animated: false)
     }
     
     @IBAction private func addEpisodeButtonTapped(_ sender: UIButton) {
         let storyboard = UIStoryboard(name: "EpisodeScreens", bundle: nil)
         let addEpViewController = storyboard.instantiateViewController(withIdentifier: "AddEpViewController") as? AddEpViewController
-        if let appEpScreen = addEpViewController {
-                appEpScreen.showId = showId
-                appEpScreen.loggedUser = loggedUser
-                appEpScreen.delegate = self
-                let navigationController = UINavigationController(rootViewController: appEpScreen)
-                present(navigationController, animated: true, completion: nil)
-        }
+        guard let appEpScreen = addEpViewController else { return }
+        appEpScreen.showId = showId
+        appEpScreen.loggedUser = loggedUser
+        appEpScreen.delegate = self
+        let navigationController = UINavigationController(rootViewController: appEpScreen)
+        present(navigationController, animated: true, completion: nil)
     }
 }
 
@@ -136,16 +128,14 @@ extension ShowDetailsViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if (indexPath.row>0) {
             let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: TVShowTableViewEpisodeCell.self), for: indexPath) as! TVShowTableViewEpisodeCell
-            if let arrayOfEpisodes = showEpisodes {
-                cell.configure(episode: arrayOfEpisodes[indexPath.row-1])
-            }
+            guard let arrayOfEpisodes = showEpisodes else { return cell }
+            cell.configure(episode: arrayOfEpisodes[indexPath.row-1])
             return cell
         }
         else {
             let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: TVShowTableViewHeaderViewCell.self), for: indexPath) as! TVShowTableViewHeaderViewCell
-            if let details = showDetails, let arrayOfEpisodes = showEpisodes {
-                cell.configure(details: details, count: arrayOfEpisodes.count)
-            }
+            guard let details = showDetails, let arrayOfEpisodes = showEpisodes else { return cell }
+            cell.configure(details: details, count: arrayOfEpisodes.count)
             return cell
         }
     }
@@ -165,10 +155,7 @@ extension ShowDetailsViewController: UITableViewDelegate {
 extension ShowDetailsViewController: ShowReloadEpisodesDelegate {
     
     func showReloadEpisodes() {
-        if let id = showId, let token = loggedUser?.token {
-            _promiseKitFetchShowEpisodes(id: id, token: token)
-        }
+        guard let id = showId, let token = loggedUser?.token else { return }
+        _promiseKitFetchShowEpisodes(id: id, token: token)
     }
-    
-    
 }

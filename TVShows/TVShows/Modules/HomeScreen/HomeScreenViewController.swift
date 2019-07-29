@@ -30,13 +30,17 @@ final class HomeScreenViewController: UIViewController {
         setupUI()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(false, animated: false)
+    }
+    
     // MARK: Configure UI
     
     private func setupUI() {
         setupUITableView()
-        if let token = loggedUser?.token {
-            _promiseKitFetchShows(token: token)
-        }
+        guard let token = loggedUser?.token else { return }
+        _promiseKitFetchShows(token: token)
         title = "Shows"
     }
     
@@ -48,16 +52,6 @@ final class HomeScreenViewController: UIViewController {
         tableView.showsVerticalScrollIndicator = false
         tableView.estimatedRowHeight = 100
         tableView.rowHeight = UITableView.automaticDimension
-    }
-    
-    // MARK: Show Error message
-    
-    private func showErrorMessage(message: String) {
-        let title = "Error"
-        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        let OKAction = UIAlertAction(title: "OK", style: .default, handler: nil)
-        alertController.addAction(OKAction)
-        self.present(alertController, animated: true, completion: nil)
     }
 }
 
@@ -99,12 +93,10 @@ extension HomeScreenViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: TVShowTableViewCell.self), for: indexPath) as! TVShowTableViewCell
-        if let arrayOfShows = shows {
-            cell.configure(show: arrayOfShows[indexPath.row])
-        }
+        guard let arrayOfShows = shows else { return cell }
+        cell.configure(show: arrayOfShows[indexPath.row])
         return cell
     }
-    
 }
 
 // MARK - UITableViewDelegate methods for UITableView behaviour
@@ -124,14 +116,10 @@ extension HomeScreenViewController: UITableViewDelegate {
         tableView.deselectRow(at: indexPath, animated: true)
         let storyboard = UIStoryboard(name: "ShowScreens", bundle: nil)
         let showDetailsViewController = storyboard.instantiateViewController(withIdentifier: "ShowDetailsViewController") as? ShowDetailsViewController
-        if let showScreen = showDetailsViewController {
-            if let arrayOfShows = shows {
-                showScreen.showId = arrayOfShows[indexPath.row].id
-                showScreen.loggedUser = loggedUser
-                navigationController?.pushViewController(showScreen, animated: true)
-                navigationController?.setNavigationBarHidden(true, animated: false)
-            }
-        }
+        guard let showScreen = showDetailsViewController, let arrayOfShows = shows else { return }
+        showScreen.showId = arrayOfShows[indexPath.row].id
+        showScreen.loggedUser = loggedUser
+        navigationController?.pushViewController(showScreen, animated: true)
     }
     
 }
