@@ -15,7 +15,7 @@ final class ShowGridLayoutCell: UICollectionViewCell {
     
     // MARK - Outlets
     
-    @IBOutlet weak var showImageView: UIImageView!
+    @IBOutlet private weak var showImageView: UIImageView!
     
     // MARK - Lifecycle methods
     

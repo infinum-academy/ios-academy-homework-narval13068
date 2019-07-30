@@ -52,24 +52,38 @@ final class AddEpViewController: UIViewController, UITextFieldDelegate {
     // MARK - Configure UI
     
     private func setupUI() {
-        title = "Add episode"
-        episodeTitleField.delegate = self
-        seasonNField.delegate = self
-        episodeNField.delegate = self
-        episodeDescrField.delegate = self
+        setupNavigationBar()
+        setupTextFields()
+        setupNotificationCenter()
+        gestureRecognizersSetup()
         imagePicker.delegate = self
+    }
+    
+    private func setupNotificationCenter() {
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardFinishedShowing), name: UIResponder.keyboardDidHideNotification, object: nil)
+    }
+    
+    private func setupNavigationBar() {
+        title = "Add episode"
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(didSelectCancelAddEp))
         navigationItem.leftBarButtonItem?.tintColor = UIColor(named: "Pink")
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Add", style: .plain, target: self, action: #selector(didSelectAddEp))
         navigationItem.rightBarButtonItem?.tintColor = UIColor(named: "Pink")
-        scrollView.showsVerticalScrollIndicator = false
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardFinishedShowing), name: UIResponder.keyboardDidHideNotification, object: nil)
-        self.view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(viewTapped)))
+    }
+    
+    private func gestureRecognizersSetup() {
+        view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(viewTapped)))
         episodeImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(addPhotoTapHandler)))
         cameraImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(addPhotoTapHandler)))
         uploadPhotoButton.addTarget(self, action: #selector(addPhotoTapHandler), for: .touchUpInside)
-        
+    }
+    
+    private func setupTextFields() {
+        episodeTitleField.delegate = self
+        seasonNField.delegate = self
+        episodeNField.delegate = self
+        episodeDescrField.delegate = self
     }
     
     // MARK - Actions on tapped Navigation Item
@@ -98,11 +112,10 @@ final class AddEpViewController: UIViewController, UITextFieldDelegate {
     // MARK - Moving Scrollview for showing textfields when keyboard overlaps them
     
     @objc private func keyboardWillShow(_ notification: Notification) {
-        if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
-            let keyboardRectangle = keyboardFrame.cgRectValue
-            let keyboardHeight = keyboardRectangle.height
-            scrollView.contentInset = UIEdgeInsets(top: 0.0, left: 0.0, bottom: keyboardHeight, right: 0.0)
-        }
+        guard let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue else { return }
+        let keyboardRectangle = keyboardFrame.cgRectValue
+        let keyboardHeight = keyboardRectangle.height
+        scrollView.contentInset = UIEdgeInsets(top: 0.0, left: 0.0, bottom: keyboardHeight, right: 0.0)
     }
     
     @objc private func keyboardFinishedShowing(_ notification: NSNotification) {
@@ -117,19 +130,9 @@ final class AddEpViewController: UIViewController, UITextFieldDelegate {
     }
     
     @objc private func viewTapped (sender: UITapGestureRecognizer) {
-        self.view.endEditing(true)
+        view.endEditing(true)
     }
-    
-    // MARK: Show Error message
-    
-    private func showErrorMessage(message: String) {
-        let title = "Error"
-        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        let OKAction = UIAlertAction(title: "OK", style: .default, handler: nil)
-        alertController.addAction(OKAction)
-        self.present(alertController, animated: true, completion: nil)
-    }
-    
+
     // MARK - Process of UploadRequest
     
     private func processUploadRequest(_ uploadRequest: UploadRequest) {
@@ -213,15 +216,12 @@ extension AddEpViewController: UIImagePickerControllerDelegate, UINavigationCont
     }
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-        if let image = info[UIImagePickerController.InfoKey.editedImage] as? UIImage {
-            if let token = loggedUser?.token {
-                 _uploadImageOnApi(image: image, token: token)
-                episodeImageView.image = image
-                episodeImageView.isHidden = false
-                cameraImageView.isHidden = true
-                uploadPhotoButton.isHidden = true
-            }
-        }
+        guard let image = info[UIImagePickerController.InfoKey.editedImage] as? UIImage, let token = loggedUser?.token else  { return }
+        _uploadImageOnApi(image: image, token: token)
+        episodeImageView.image = image
+        episodeImageView.isHidden = false
+        cameraImageView.isHidden = true
+        uploadPhotoButton.isHidden = true
         dismiss(animated: true, completion: nil)
     }
 }

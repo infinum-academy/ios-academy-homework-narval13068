@@ -34,13 +34,20 @@ final class HomeScreenViewController: UIViewController {
         setupUI()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        navigationController?.setNavigationBarHidden(false, animated: false)
+    }
+    
     // MARK: Configure UI
     
     private func setupUI() {
         setupUICollectionView()
-        if let token = loggedUser?.token {
-            _promiseKitFetchShows(token: token)
-        }
+        guard let token = loggedUser?.token else { return }
+        _promiseKitFetchShows(token: token)
+        setupNavigationBar()
+    }
+    
+    private func setupNavigationBar() {
         title = "Shows"
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "ic-logout"), style: .plain, target: self, action: #selector(logoutUser))
         gridButton = UIBarButtonItem(image: UIImage(named: "ic-gridview"), style: .plain, target: self, action: #selector(changeCollectionViewLayout))
@@ -57,16 +64,6 @@ final class HomeScreenViewController: UIViewController {
         collectionView.showsVerticalScrollIndicator = false
     }
     
-    // MARK: Show Error message
-    
-    private func showErrorMessage(message: String) {
-        let title = "Error"
-        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        let OKAction = UIAlertAction(title: "OK", style: .default, handler: nil)
-        alertController.addAction(OKAction)
-        self.present(alertController, animated: true, completion: nil)
-    }
-    
     // MARK - Logout user
     
     @objc private func logoutUser() {
@@ -78,10 +75,8 @@ final class HomeScreenViewController: UIViewController {
     private func showLoginScreen() {
         let storyboard = UIStoryboard(name: "Login", bundle: nil)
         let loginViewController = storyboard.instantiateViewController(withIdentifier: "LoginViewController") as? LoginViewController
-        if let loginScreen = loginViewController {
-            self.navigationController?.setNavigationBarHidden(true, animated: true)
-            self.navigationController?.setViewControllers([loginScreen], animated: true)
-        }
+        guard let loginScreen = loginViewController else { return }
+        self.navigationController?.setViewControllers([loginScreen], animated: true)
     }
     
     // MARK - Change UICollectionView layout between flow and grid layout
@@ -136,15 +131,13 @@ extension HomeScreenViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if flowLayout {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: String(describing: ShowFlowLayoutCell.self), for: indexPath) as! ShowFlowLayoutCell
-            if let arrayOfShows = shows {
-                cell.configure(show: arrayOfShows[indexPath.row])
-            }
+            guard let arrayOfShows = shows else { return cell }
+            cell.configure(show: arrayOfShows[indexPath.row])
             return cell
         } else {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: String(describing: ShowGridLayoutCell.self), for: indexPath) as! ShowGridLayoutCell
-            if let arrayOfShows = shows {
-                cell.configure(show: arrayOfShows[indexPath.row])
-            }
+            guard let arrayOfShows = shows else { return cell }
+            cell.configure(show: arrayOfShows[indexPath.row])
             return cell
         }
     }
@@ -159,14 +152,11 @@ extension HomeScreenViewController: UICollectionViewDelegate, UICollectionViewDe
         collectionView.deselectItem(at: indexPath, animated: true)
         let storyboard = UIStoryboard(name: "ShowScreens", bundle: nil)
         let showDetailsViewController = storyboard.instantiateViewController(withIdentifier: "ShowDetailsViewController") as? ShowDetailsViewController
-        if let showScreen = showDetailsViewController {
-            if let arrayOfShows = shows {
-                showScreen.showId = arrayOfShows[indexPath.row].id
-                showScreen.loggedUser = loggedUser
-                navigationController?.pushViewController(showScreen, animated: true)
-                navigationController?.setNavigationBarHidden(true, animated: false)
-            }
-        }
+        guard let showScreen = showDetailsViewController, let arrayOfShows = shows else { return }
+        showScreen.showId = arrayOfShows[indexPath.row].id
+        showScreen.loggedUser = loggedUser
+        navigationController?.pushViewController(showScreen, animated: true)
+        navigationController?.setNavigationBarHidden(true, animated: false)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
@@ -178,5 +168,19 @@ extension HomeScreenViewController: UICollectionViewDelegate, UICollectionViewDe
             return CGSize(width: scale, height: scale)
         }
     }
+}
+
+// MARK: Show Error message
+
+extension UIViewController {
+   
+    func showErrorMessage(message: String) {
+        let title = "Error"
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        let OKAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+        alertController.addAction(OKAction)
+        self.present(alertController, animated: true, completion: nil)
+    }
+    
 }
 

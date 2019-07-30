@@ -49,22 +49,28 @@ final class LoginViewController : UIViewController, UITextFieldDelegate {
     // MARK - UI Configure
     
     private func initialConfigureUI() {
+        setupTextFields()
+        setupNotificationCenter()
         loginButton.layer.cornerRadius = 5
-        scrollView.showsVerticalScrollIndicator = false
-        usernameField.delegate = self
-        passwordField.delegate = self
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardFinishedShowing), name: UIResponder.keyboardDidHideNotification, object: nil)
         view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(viewTapped)))
         SVProgressHUD.setDefaultMaskType(.black)
     }
     
+    private func setupNotificationCenter() {
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardFinishedShowing), name: UIResponder.keyboardDidHideNotification, object: nil)
+    }
+    
+    private func setupTextFields() {
+        usernameField.delegate = self
+        passwordField.delegate = self
+    }
+    
     func checkRememberedUser() {
-        let email = Keychain.load("loginEmail")
-        let password = Keychain.load("loginPassword")
-        if let email = email, let password = password {
-            _promiseKitLoginUserWith(email: email, password: password)
-        }
+        let emailKeychain = Keychain.load("loginEmail")
+        let passwordKeychain = Keychain.load("loginPassword")
+        guard let email = emailKeychain, let password = passwordKeychain else { return }
+        _promiseKitLoginUserWith(email: email, password: password)
     }
     
     // MARK - Actions
@@ -77,7 +83,7 @@ final class LoginViewController : UIViewController, UITextFieldDelegate {
         loginButtonClickedAnimation()
         if let username = usernameField.text, !username.isEmpty, let password = passwordField.text, !password.isEmpty {
             _promiseKitLoginUserWith(email: username, password: password)
-            self.view.endEditing(true)
+            view.endEditing(true)
         } else if let username = usernameField.text, username.isEmpty {
             usernameFieldShakeAnimation()
         } else {
@@ -88,7 +94,7 @@ final class LoginViewController : UIViewController, UITextFieldDelegate {
     @IBAction private func createAccountPushed(_ sender: UIButton) {
        if let username = usernameField.text, !username.isEmpty, let password = passwordField.text, !password.isEmpty {
             _promiseKitRegisterUserWith(email: username, password: password)
-            self.view.endEditing(true)
+            view.endEditing(true)
        } else if let username = usernameField.text, username.isEmpty {
             usernameFieldShakeAnimation()
        } else {
@@ -99,7 +105,7 @@ final class LoginViewController : UIViewController, UITextFieldDelegate {
     // MARK - Dismissing keyboard
     
     @objc private func viewTapped (sender: UITapGestureRecognizer) {
-        self.view.endEditing(true)
+        view.endEditing(true)
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -110,11 +116,10 @@ final class LoginViewController : UIViewController, UITextFieldDelegate {
     // MARK - Moving Scrollview for showing textfields when keyboard overlaps them
     
     @objc private func keyboardWillShow(_ notification: Notification) {
-        if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
-            let keyboardRectangle = keyboardFrame.cgRectValue
-            let keyboardHeight = keyboardRectangle.height
-            scrollView.contentInset = UIEdgeInsets(top: 0.0, left: 0.0, bottom: keyboardHeight, right: 0.0)
-        }
+        guard let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue else { return }
+        let keyboardRectangle = keyboardFrame.cgRectValue
+        let keyboardHeight = keyboardRectangle.height
+        scrollView.contentInset = UIEdgeInsets(top: 0.0, left: 0.0, bottom: keyboardHeight, right: 0.0)
     }
         
     @objc private func keyboardFinishedShowing(_ notification: NSNotification) {
@@ -126,11 +131,10 @@ final class LoginViewController : UIViewController, UITextFieldDelegate {
     private func showHomeScreen() {
         let storyboard = UIStoryboard(name: "HomeScreen", bundle: nil)
         let homeScreenViewController = storyboard.instantiateViewController(withIdentifier: "HomeScreenViewController") as? HomeScreenViewController
-        if let homeScreen = homeScreenViewController {
-            homeScreen.loggedUser = self.loggedUser
-            self.navigationController?.setNavigationBarHidden(false, animated: true)
-            self.navigationController?.setViewControllers([homeScreen], animated: true)
-        }
+        guard let homeScreen = homeScreenViewController else { return }
+        homeScreen.loggedUser = loggedUser
+        navigationController?.setNavigationBarHidden(false, animated: true)
+        navigationController?.setViewControllers([homeScreen], animated: true)
     }
     
     private func rememberUser(email: String, password: String) {
@@ -139,16 +143,7 @@ final class LoginViewController : UIViewController, UITextFieldDelegate {
             _ = Keychain.save(password, forKey: "loginPassword")
         }
     }
-    
-    // MARK: Show Error message
-    
-    private func showErrorMessage(message: String) {
-        let title = "Error"
-        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        let OKAction = UIAlertAction(title: "OK", style: .default, handler: nil)
-        alertController.addAction(OKAction)
-        self.present(alertController, animated: true, completion: nil)
-    }
+
 }
 
 // MARK - Api Calls

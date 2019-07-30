@@ -42,19 +42,22 @@ final class EpisodeCommentsViewController: UIViewController, UITextFieldDelegate
     
     private func setupUI() {
         setupUITableView()
+        textFieldSetup()
+        guard let token = loggedUser?.token, let id = episode?.id else { return }
+        _promiseKitFetchComments(token: token, id: id)
+        setupKeyboardNotificationCenter()
+        view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(viewTapped)))
+    }
+    
+    private func textFieldSetup() {
         commentTextField.delegate = self
         roundedViewAroundTextField.layer.cornerRadius = 15
         roundedViewAroundTextField.clipsToBounds = true
         roundedViewAroundTextField.layer.borderWidth = 1
         roundedViewAroundTextField.layer.borderColor = UIColor.lightGray.cgColor
-        if let token = loggedUser?.token, let id = episode?.id {
-            _promiseKitFetchComments(token: token, id: id)
-        }
-        setupKeyboardNotificationCenter()
-        view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(viewTapped)))
     }
     
-    func setupUITableView() {
+    private func setupUITableView() {
         tableView.delegate = self
         tableView.dataSource = self
         tableView.showsVerticalScrollIndicator = false
@@ -65,7 +68,7 @@ final class EpisodeCommentsViewController: UIViewController, UITextFieldDelegate
         tableView.addSubview(refreshControl)
     }
     
-    func setupKeyboardNotificationCenter() {
+    private func setupKeyboardNotificationCenter() {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
@@ -74,8 +77,8 @@ final class EpisodeCommentsViewController: UIViewController, UITextFieldDelegate
     
     @objc private func updateUITableView () {
         guard let token = loggedUser?.token, let id = episode?.id else { return }
-            _promiseKitFetchComments(token: token, id: id)
-            refreshControl.endRefreshing()
+        _promiseKitFetchComments(token: token, id: id)
+        refreshControl.endRefreshing()
     }
     
     // MARK - Navigation
@@ -92,7 +95,7 @@ final class EpisodeCommentsViewController: UIViewController, UITextFieldDelegate
     }
     
     @objc private func viewTapped(sender: UITapGestureRecognizer) {
-        self.view.endEditing(true)
+        view.endEditing(true)
     }
     
     // MARK - Moving comment field above keyboard
@@ -113,22 +116,11 @@ final class EpisodeCommentsViewController: UIViewController, UITextFieldDelegate
         view.layoutIfNeeded()
     }
     
-    // MARK - Error Message
-    
-    private func showErrorMessage(message: String) {
-        let title = "Error"
-        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        let OKAction = UIAlertAction(title: "OK", style: .default, handler: nil)
-        alertController.addAction(OKAction)
-        self.present(alertController, animated: true, completion: nil)
-    }
-    
     // MARK - New comment posting
 
     @IBAction private func postButtonTapped(_ sender: Any) {
-        if let token = loggedUser?.token, let id = episode?.id, let text = commentTextField.text {
-            _promiseKitPostComment(token: token, id: id, text: text)
-        }
+        guard let token = loggedUser?.token, let id = episode?.id, let text = commentTextField.text else { return }
+        _promiseKitPostComment(token: token, id: id, text: text)
         commentTextField.text = ""
         view.endEditing(true)
     }
@@ -198,14 +190,11 @@ extension EpisodeCommentsViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: EpisodeCommentCell.self), for: indexPath) as! EpisodeCommentCell
-        if let arrayOfComments = comments {
-            cell.configure(comment: arrayOfComments[indexPath.row])
-        }
-        
+        guard let arrayOfComments = comments else { return cell }
+        cell.configure(comment: arrayOfComments[indexPath.row])
         if indexPath.row % 3 == 0 { cell.iconCommentImageView.image = UIImage(named: "img-placeholder-user1")}
         else if indexPath.row % 3 == 1 {cell.iconCommentImageView.image = UIImage(named: "img-placeholder-user2")}
         else {cell.iconCommentImageView.image = UIImage(named: "img-placeholder-user3")}
-        
         return cell
     }
 }

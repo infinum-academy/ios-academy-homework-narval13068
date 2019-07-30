@@ -39,9 +39,8 @@ final class EpisodeScreenViewController: UIViewController {
     // MARK - Configure UI
     
     private func setupUI() {
-        if let id = episode?.id, let token = loggedUser?.token {
-            _promiseKitFetchEpisodeDetails(id: id, token: token)
-        }
+        guard let id = episode?.id, let token = loggedUser?.token else { return }
+        _promiseKitFetchEpisodeDetails(id: id, token: token)
         commentsView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(showComments)))
     }
     
@@ -50,25 +49,14 @@ final class EpisodeScreenViewController: UIViewController {
     @objc private func showComments(sender: UITapGestureRecognizer) {
         let storyboard = UIStoryboard(name: "EpisodeComments", bundle: nil)
         let episodeCommentsViewController = storyboard.instantiateViewController(withIdentifier: "EpisodeCommentsViewController") as? EpisodeCommentsViewController
-        if let commentsScreen = episodeCommentsViewController {
-            commentsScreen.loggedUser = loggedUser
-            commentsScreen.episode = episode
-            present(commentsScreen, animated: true, completion: nil)
-        }
+        guard let commentsScreen = episodeCommentsViewController else { return }
+        commentsScreen.loggedUser = loggedUser
+        commentsScreen.episode = episode
+        present(commentsScreen, animated: true, completion: nil)
     }
 
     @IBAction private func backButtonTapped(_ sender: Any) {
         navigationController?.popViewController(animated: true)
-    }
-    
-    // MARK - Error message
-    
-    private func showErrorMessage(message: String) {
-        let title = "Error"
-        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        let OKAction = UIAlertAction(title: "OK", style: .default, handler: nil)
-        alertController.addAction(OKAction)
-        self.present(alertController, animated: true, completion: nil)
     }
     
     // MARK - Setting up episode details on screen
