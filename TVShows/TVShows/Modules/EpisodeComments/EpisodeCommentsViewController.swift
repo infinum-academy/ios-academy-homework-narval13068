@@ -137,7 +137,7 @@ private extension EpisodeCommentsViewController {
         SVProgressHUD.show()
         firstly {
             Alamofire
-                .request("https://api.infinum.academy/api/episodes/"+id+"/comments", method: .get, encoding: JSONEncoding.default, headers: headers)
+                .request("https://api.infinum.academy/api/episodes/\(id)/comments", method: .get, encoding: JSONEncoding.default, headers: headers)
                 .validate()
                 .responseDecodable([Comment].self, keyPath: "data")
             }.done { [weak self] comments in
