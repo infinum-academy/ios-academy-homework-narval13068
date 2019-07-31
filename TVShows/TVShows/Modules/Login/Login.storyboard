@@ -14,12 +14,12 @@
         <!--Login View Controller-->
         <scene sceneID="EzJ-0O-mUQ">
             <objects>
-                <viewController id="mdg-xr-Pqs" customClass="LoginViewController" customModule="TVShows" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="LoginViewController" id="mdg-xr-Pqs" customClass="LoginViewController" customModule="TVShows" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="d5q-fj-Nlw">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rRG-26-LHx">
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsVerticalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rRG-26-LHx">
                                 <rect key="frame" x="0.0" y="88" width="414" height="774"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="151" translatesAutoresizingMaskIntoConstraints="NO" id="PMF-DW-O0H">
@@ -164,9 +164,12 @@
                     <connections>
                         <outlet property="loginButton" destination="qEs-Yq-OcS" id="RjQ-P0-cDe"/>
                         <outlet property="passwordField" destination="YaX-qT-Kub" id="6jO-PL-rby"/>
+                        <outlet property="passwordStackView" destination="JLw-m0-3bI" id="H3R-CL-gif"/>
                         <outlet property="rememberMeButton" destination="woE-Bm-5qT" id="dkL-9v-jQ1"/>
+                        <outlet property="rememberMeCheckBox" destination="woE-Bm-5qT" id="nWx-nz-VtK"/>
                         <outlet property="scrollView" destination="rRG-26-LHx" id="Y00-wV-7V6"/>
                         <outlet property="usernameField" destination="LSm-c2-9Ay" id="jR9-iV-mET"/>
+                        <outlet property="usernameStackView" destination="ol7-PR-4gD" id="UZY-Bq-qo1"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="LQh-h3-7JR" userLabel="First Responder" sceneMemberID="firstResponder"/>
